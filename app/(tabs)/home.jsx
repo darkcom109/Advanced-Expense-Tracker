@@ -39,7 +39,7 @@ export default function Home() {
     <View style={styles.card}>
         <View style={styles.cardRow}>
             <Text style={styles.item}>{item.item}</Text>
-            <Text style={styles.cost}>£{item.cost}</Text>
+            <Text style={[styles.cost]}>£{item.cost}</Text>
         </View>
         <View style={styles.cardRow}>
             <Text style={styles.date}>
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
   cost: {
     fontFamily: "Inter_400Regular",
     fontSize: 18,
-    fontWeight: "700",
     color: "#00ffc8", // neon pop for money
     marginLeft: "auto",
     margin: 5,
