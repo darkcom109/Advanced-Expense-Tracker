@@ -1,12 +1,9 @@
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
@@ -25,18 +22,34 @@ export default function Home() {
     };
 
     loadExpenses();
-  }, []);
+  }, [expenses]);
+
+  const handleDelete = async (date) => {
+    try {
+        const updatedExpenses = expenses.filter((exp) => exp.date !== date);
+        setExpenses(updatedExpenses);
+        await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+    }
+    catch(error){
+        console.log("Error deleting expense: ", error);
+    }
+  }
 
   const renderExpense = ({ item }) => (
     <View style={styles.card}>
-      <View style={styles.cardRow}>
-        <Text style={styles.item}>{item.item}</Text>
-        <Text style={styles.cost}>${item.cost}</Text>
-      </View>
-      <Text style={styles.date}>
-        {new Date(item.date).toLocaleDateString()}{" "}
-        {new Date(item.date).toLocaleTimeString()}
-      </Text>
+        <View style={styles.cardRow}>
+            <Text style={styles.item}>{item.item}</Text>
+            <Text style={styles.cost}>£{item.cost}</Text>
+        </View>
+        <View style={styles.cardRow}>
+            <Text style={styles.date}>
+                {new Date(item.date).toLocaleDateString()}{" "}
+                {new Date(item.date).toLocaleTimeString()}
+            </Text>
+            <TouchableOpacity onPress={() => handleDelete(item.date)} style={{marginLeft: "auto"}}>
+                <Ionicons name="trash-outline" color={"#00ffc8"} size={14}/>
+            </TouchableOpacity>
+        </View>
     </View>
   );
 
@@ -49,7 +62,12 @@ export default function Home() {
         <Text style={styles.title}>Your Expenses</Text>
 
         {expenses.length === 0 ? (
-          <Text style={styles.empty}>No expenses yet</Text>
+            <View style={styles.emptyCard}>
+                <Text style={styles.empty}>No Expenses Yet</Text>
+                <TouchableOpacity style={styles.addButton} onPress={() => router.push("/expense")}>
+                    <Text style={styles.addButtonText}>Add an Expense</Text>
+                </TouchableOpacity>
+            </View>
         ) : (
           <FlatList
             data={expenses}
@@ -79,11 +97,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 20,
   },
+  emptyCard: {
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center"
+  },
   empty: {
     color: "gray",
     textAlign: "center",
     marginTop: 50,
-    fontSize: 16,
+    fontSize: 24,
+    fontFamily: "Inter_400Regular",
   },
   card: {
     backgroundColor: "rgba(255,255,255,0.08)",
@@ -93,8 +117,8 @@ const styles = StyleSheet.create({
   },
   cardRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     marginBottom: 6,
+    alignItems: "center"
   },
   item: {
     fontFamily: "Inter_400Regular",
@@ -106,10 +130,30 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#00ffc8", // neon pop for money
+    marginLeft: "auto",
+    margin: 5,
   },
   date: {
     fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: "gray",
+  },
+  addButton: {
+    backgroundColor: "#00ffc8",     // neon teal to match your theme
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginTop: 20,
+    shadowColor: "#00ffc8",         // subtle glow effect
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    elevation: 4,                   // Android shadow
+    },
+  addButtonText: {
+    color: "#0f0f23",               // dark background color for contrast
+    fontSize: 12,
+    fontFamily: "Inter_400Regular",
+    textAlign: "center",
   },
 });
