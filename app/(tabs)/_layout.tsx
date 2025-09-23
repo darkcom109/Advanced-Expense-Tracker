@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { StyleSheet } from "react-native";
 
 // TabsLayout(), a React component that will be my main tab navigation layout
 // Contains a tab container that will hold all the individual tab screens
@@ -12,10 +13,25 @@ import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
-    <Tabs>
-        <Tabs.Screen name="home" 
-                     options={{headerShown: false, tabBarIcon: ({ color, size }) => (<Ionicons name="home" size={size} color={color}/>)}}>
+    <Tabs screenOptions={{tabBarStyle: styles.tabs, tabBarActiveTintColor: '#00ffc8', tabBarInactiveTintColor: '#8a87a5'}}>
+        <Tabs.Screen name="home"
+                     options={{
+                        title: "Home",
+                        headerShown: false, 
+                        tabBarLabelStyle: styles.tabText,
+                        tabBarIcon: ({ color, size }) => (<Ionicons name="home" size={size} color={color}
+                      />)}}>
         </Tabs.Screen>
     </Tabs>
 );
 }
+
+const styles = StyleSheet.create({
+    tabs: {
+        backgroundColor: '#2d1b69',
+        borderTopWidth: 0,
+    },
+    tabText: {
+        fontFamily: "Inter_400Regular",
+    }
+})
