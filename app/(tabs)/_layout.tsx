@@ -14,12 +14,22 @@ import { StyleSheet } from "react-native";
 export default function TabsLayout() {
   return (
     <Tabs screenOptions={{tabBarStyle: styles.tabs, tabBarActiveTintColor: '#00ffc8', tabBarInactiveTintColor: '#8a87a5'}}>
+
         <Tabs.Screen name="home"
                      options={{
                         title: "Home",
                         headerShown: false, 
                         tabBarLabelStyle: styles.tabText,
                         tabBarIcon: ({ color, size }) => (<Ionicons name="home" size={size} color={color}
+                      />)}}>
+        </Tabs.Screen>
+
+        <Tabs.Screen name="expense"
+                     options={{
+                        title: "Add",
+                        headerShown: false, 
+                        tabBarLabelStyle: styles.tabText,
+                        tabBarIcon: ({ color, size }) => (<Ionicons name="add" size={size} color={color}
                       />)}}>
         </Tabs.Screen>
     </Tabs>
