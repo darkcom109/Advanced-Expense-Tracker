@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Expense() {
   const [item, setItem] = useState("");
   const [cost, setCost] = useState("");
+  const [page, setPage] = useState(0);
 
   const handleSubmit = async () => {
     if (!item || !cost) return;
@@ -25,6 +26,7 @@ export default function Expense() {
       await AsyncStorage.setItem("expenses", JSON.stringify(expenses));
       setItem("");
       setCost("");
+      setPage(1);
     } catch (error) {
       console.log("Error saving expense:", error);
     }
@@ -36,29 +38,41 @@ export default function Expense() {
       style={styles.container}
     >
       <SafeAreaView style={styles.safe}>
-        <Text style={styles.title}>Add Expense</Text>
+        {page === 0 ? (
+        <View>
+            <Text style={styles.title}>Add Expense</Text>
 
-        <View style={styles.form}>
-          <TextInput
-            placeholder="Type your expense..."
-            placeholderTextColor="gray"
-            value={item}
-            onChangeText={setItem}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Enter cost..."
-            placeholderTextColor="gray"
-            value={cost}
-            onChangeText={setCost}
-            keyboardType="numeric"
-            style={styles.input}
-          />
+            <View style={styles.form}>
+                <TextInput
+                    placeholder="Type your expense..."
+                    placeholderTextColor="gray"
+                    value={item}
+                    onChangeText={setItem}
+                    style={styles.input}
+                />
+                <TextInput
+                    placeholder="Enter cost..."
+                    placeholderTextColor="gray"
+                    value={cost}
+                    onChangeText={setCost}
+                    keyboardType="numeric"
+                    style={styles.input}
+                />
 
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Submit</Text>
+                </TouchableOpacity>
+            </View>
+        </View>) : (
+            <View>
+                <Text style={styles.title}>Submitted</Text>
+
+                <TouchableOpacity style={styles.button} onPress={() => {setPage(0)}}>
+                    <Text style={styles.buttonText}>Add Another Item</Text>
+                </TouchableOpacity>
+            </View>
+        )
+        }
       </SafeAreaView>
     </LinearGradient>
   );

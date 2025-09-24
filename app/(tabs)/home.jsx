@@ -5,36 +5,49 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import generateText from '../utils/summariser';
 
 export default function Home() {
-  const [expenses, setExpenses] = useState([]);
+    // {expenses} is my state array, initially empty
+    // {setExpenses} is a function to replace that array (not append)
+    const [expenses, setExpenses] = useState([]);
 
-  useEffect(() => {
-    const loadExpenses = async () => {
-      try {
-        const stored = await AsyncStorage.getItem("expenses");
-        if (stored) {
-          setExpenses(JSON.parse(stored));
+    // Runs every time expenses changes
+    // 1) Fetches the "expenses" value from AsyncStorage
+    // 2) If found, parses it from JSON into a JavaScript Array
+    // 3) Updates state with setExpenses
+
+    useEffect(() => {
+        const loadExpenses = async () => {
+        try {
+            const stored = await AsyncStorage.getItem("expenses");
+            if (stored) {
+                setExpenses(JSON.parse(stored));
+            }
+        } catch (error) {
+            console.log("Error loading expenses:", error);
         }
-      } catch (error) {
-        console.log("Error loading expenses:", error);
-      }
-    };
+        };
 
     loadExpenses();
-  }, [expenses]);
+    }, [expenses]);
 
-  const handleDelete = async (date) => {
-    try {
-        const updatedExpenses = expenses.filter((exp) => exp.date !== date);
-        setExpenses(updatedExpenses);
-        await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+    // Filters out the expense whose date matches the one clicked
+    // Updates both state and AsyncStorage to keep them in sync
+    const handleDelete = async (date) => {
+        try {
+            const updatedExpenses = expenses.filter((exp) => exp.date !== date);
+            setExpenses(updatedExpenses);
+            await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+        }
+        catch(error){
+            console.log("Error deleting expense: ", error);
+        }
     }
-    catch(error){
-        console.log("Error deleting expense: ", error);
-    }
-  }
 
+    generateText("Hello");
+
+  // Displays each expense in a card
   const renderExpense = ({ item }) => (
     <View style={styles.card}>
         <View style={styles.cardRow}>
@@ -52,6 +65,11 @@ export default function Home() {
         </View>
     </View>
   );
+
+  // FlatList renders long lists efficiently instead of manually mapping over an array
+  // data={expenses} is the array of items you want to display
+  // keyExtractor={(item, index) => index.toString()} this is a key to keep track of each item
+  // renderItem={renderExpense} is a function to tell the flatlist how to display each item 
 
   return (
     <LinearGradient
@@ -74,6 +92,7 @@ export default function Home() {
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderExpense}
             contentContainerStyle={{ paddingVertical: 16 }}
+            showsVerticalScrollIndicator={false}
           />
         )}
       </SafeAreaView>
