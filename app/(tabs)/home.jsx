@@ -119,6 +119,11 @@ export default function Home() {
     // keyExtractor={(item, index) => index.toString()} this is a key to keep track of each item
     // renderItem={renderExpense} is a function to tell the flatlist how to display each item 
 
+    const maxValue = chartData.data.length ? Math.max(...chartData.data) : 0;
+    const roundedMax = Math.ceil(maxValue / 25) * 25 || 25; // ensures at least 25
+    const segmentCount = roundedMax / 25; // how many horizontal lines we want
+    
+
     return (
         <LinearGradient
         colors={["#0f0f23", "#1a1a3e", "#2d1b69"]}
@@ -131,40 +136,43 @@ export default function Home() {
             {chartData.data.length > 0 && (
             <View style={{ marginVertical: 16 }}>
                 <LineChart
-                data={{
-                    labels: chartData.labels,
-                    datasets: [{ data: chartData.data }],
-                }}
-                width={screenWidth - 40} // match SafeAreaView padding
-                height={220}
-                yAxisLabel="£"
-                fromZero={true}
-                yAxisInterval={1}
-                bezier
-                chartConfig={{
-                    backgroundColor: "#1a1a3e",
-                    backgroundGradientFrom: "#1a1a3e",
-                    backgroundGradientTo: "#2d1b69",
-                    decimalPlaces: 2,
-                    color: (opacity = 1) => `rgba(0, 255, 200, ${opacity})`, // neon teal line
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    propsForDots: {
-                    r: "5",
-                    strokeWidth: "2",
-                    stroke: "#00ffc8",
+                    data={{
+                        labels: chartData.labels,
+                        datasets: [{ data: chartData.data }],
+                    }}
+                    width={screenWidth - 40} // match SafeAreaView padding
+                    height={220}
+                    yAxisLabel="£"
+                    fromZero={true}
+                    yAxisInterval={1}
+                    bezier
+                    segments={segmentCount}
+                    chartConfig={{
+                        backgroundColor: "#1a1a3e",
+                        backgroundGradientFrom: "#1a1a3e",
+                        backgroundGradientTo: "#2d1b69",
+                        decimalPlaces: 2,
+                        color: (opacity = 1) => `rgba(0, 255, 200, ${opacity})`, // neon teal line
+                        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        propsForDots: {
+                        r: "5",
+                        strokeWidth: "2",
+                        stroke: "#00ffc8",
+                        },
+                        propsForBackgroundLines: {
+                        stroke: "rgba(255,255,255,0.1)",
+                        },
+                        propsForLabels: {
+                        fontFamily: "Inter_400Regular",
+                        fontSize: 12,
                     },
-                    propsForBackgroundLines: {
-                    stroke: "rgba(255,255,255,0.1)",
-                    },
-                    propsForLabels: {
-                    fontFamily: "Inter_400Regular",
-                    fontSize: 12,
-                },
-                }}
-                style={{
-                    borderRadius: 16,
-                    alignSelf: "center",
-                }}
+                    }}
+                    style={{
+                        borderRadius: 16,
+                        borderBlockColor: "white",
+                        alignSelf: "center",
+                        paddingTop: 24,
+                    }}
                 />
             </View>
             )}
