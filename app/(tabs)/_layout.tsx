@@ -20,8 +20,8 @@ export default function TabsLayout() {
                         title: "Home",
                         headerShown: false, 
                         tabBarLabelStyle: styles.tabText,
-                        tabBarIcon: ({ color, size }) => (<Ionicons name="home" size={size} color={color}
-                      />)}}>
+                        tabBarIcon: ({ color, size }) => (<Ionicons name="home" size={size} color={color}/>)
+                        }}>
         </Tabs.Screen>
 
         <Tabs.Screen name="expense"
@@ -29,8 +29,8 @@ export default function TabsLayout() {
                         title: "Add",
                         headerShown: false, 
                         tabBarLabelStyle: styles.tabText,
-                        tabBarIcon: ({ color, size }) => (<Ionicons name="add" size={size} color={color}
-                      />)}}>
+                        tabBarIcon: ({ color, size }) => (<Ionicons name="add" size={size} color={color}/>)
+                        }}>
         </Tabs.Screen>
     </Tabs>
 );
